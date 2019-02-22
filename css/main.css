@@ -1,0 +1,45 @@
+/*-------CARDS ----------*/ 
+
+.post{
+	margin-top: 50px; 
+	border-radius: 25px; 
+}
+
+.sidebar{
+	background-color: rgb(239, 239, 239) ; 
+	text-align: center; 
+	padding-top: 25px; 
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	border-top-left-radius: 8px; 
+	border-bottom-left-radius: 8px; 
+} 
+
+.post-content{
+	padding: 30px; 
+	background-color: rgb(247, 247, 247);
+	border-top-right-radius: 8px; 
+	border-bottom-right-radius: 8px;
+}
+
+.post-header{
+
+}
+
+.post-body{
+
+}
+
+.post-footer{
+	padding: 0px !important;
+}
+
+.post-footer button{
+	margin: 0px !important;
+}
+
+.mainfeed{
+	padding-right: 10% !important;
+	padding-left: 10% !important;
+
+}
