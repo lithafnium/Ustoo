@@ -1,3 +1,7 @@
+body{
+
+}
+
 /*-------CARDS ----------*/ 
 
 .post{
@@ -45,5 +49,6 @@
 .mainfeed{
 	padding-right: 10% !important;
 	padding-left: 10% !important;
+	margin-bottom: 50px;
 
 }
