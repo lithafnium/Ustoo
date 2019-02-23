@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>Blueprint 2019</title>
+  <title>UsToo</title>
   
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <link href="css/main.css" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
   <script src = "js/app.js"></script>
 
 
@@ -18,8 +21,8 @@
 <body>
 
     <!-- Add Navbar Here -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
+        <a class="navbar-brand" href="#">UsToo</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,28 +32,23 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            <button class="btn btn-custom" type="submit" data-toggle="modal" data-target="#newCampaign"><i class="fas fa-pencil-alt"></i> Create Campaign</button>
+            <div class="dropdown">
+              <button class="btn btn-outline-custom dropdown-toggle dropdown-custom" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user"></i> 
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Campaigns</a>
+                <a class="dropdown-item" href="#">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Logout</a>
+              </div>
+            </div>
+            
+
           </div>
     </nav>
     
@@ -118,9 +116,9 @@
 
     <template>
         <div class = "container post" >
-               <div class = "row">
+               <div class = "row card-row">
                    <div class = "col-md-2 col-sm-4 sidebar">
-                       <div class = "col-md-12 ">
+                       <div class = "col-md-12">
                             <span><h3 class = "supportcountlabel"> </h3></span>
                             <p> Supporters</p>
                           
@@ -135,7 +133,7 @@
                        </div>
                        <div class = "row post-footer" >
                             <div class = "col-md-4" style = "padding: 0px !important" >
-                              <button class="btn btn-success my-2 my-sm-0"  type="submit" onclick = "addSupporters(this)">Support</button>
+                              <button class="btn btn-custom my-2 my-sm-0" type="submit" onclick = "addSupporters(this)">Support</button>
                             </div>
                             <div class ="col-md-8 " style = "text-align: right">
                               <p class = "post-info"><span><i>Posted by <a class = "poster" href = "#"></a></span> at <span class = "post-date"></span></i></p>
@@ -148,12 +146,61 @@
                </div>
           </div>
     </template>
+
+    <div class="modal fade" id="newCampaign" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Campaign</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Title:</label>
+                <input type="text" class="form-control form-title" id="campaign-title">
+                <p id = "noTitle"  style = "color: red; font-size: 0.8em; display: none">This field is required</p>
+
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Location</label>
+                <input type="text" class="form-control form-location" id="campaign-title">
+                <p id = "noLocation"  style = "color: red; font-size: 0.8em; display: none">This field is required</p>
+
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Description:</label>
+                <textarea class="form-control form-content" id="campaign-description"></textarea>
+                <p id = "noContent"  style = "color: red; font-size: 0.8em; display: none">This field is required</p>
+
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success btn-custom" onclick = "addCampaign(this)">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function(){
+
+        $("#newCampaign").on('hide.bs.modal', function(){
+          resetModal()
+        });
+    });
+    </script>
     
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 </body>
 
 
