@@ -24,7 +24,6 @@ db.collection('Posts').get().then(function(querySnapshot){
 	querySnapshot.forEach(function(doc){
 		// gets the template from the HTML 
 		var temp = document.getElementsByTagName("template")[0];
-
 		var data = doc.data(); 
 		// parses the data into variables 
 		var title = data["Title"]; 
@@ -33,6 +32,7 @@ db.collection('Posts').get().then(function(querySnapshot){
 		var support = data["Support"]; 
 		var location = data["Location"]; 
 		var poster = data["Poster"]; 
+		var postID = doc.id; 
 
 		// sets the template with the data
 		temp.content.querySelector(".title").innerHTML = title;
@@ -40,11 +40,47 @@ db.collection('Posts').get().then(function(querySnapshot){
 		temp.content.querySelector(".supportcountlabel").innerHTML = support;
 		temp.content.querySelector(".poster").innerHTML = poster;
 		temp.content.querySelector(".post-date").innerHTML = time; 
+		//console.log(postID); 
+		temp.content.querySelector(".post").id = postID; 
 
 		var clone = document.importNode(temp.content, true); 
 
 		document.getElementById("feed").appendChild(clone); 
 	})
 });
+
+db.collection('Posts').onSnapshot(function(querySnapshot){
+	querySnapshot.forEach(function(doc) {
+		console.log(doc.data()["Support"]);
+		var updatedPost = document.getElementById(doc.id);
+		updatedPost.querySelector(".supportcountlabel").innerHTML = doc.data()["Support"];
+    });
+
+});
+
+function addSupporters(button){
+		//console.log("asdf"); 
+	//console.log(button.closest(".post").id); 
+	var postID = button.closest(".post").id;
+	var currentSupport = 0; 
+	var postRef = db.collection("Posts").doc(postID);
+
+	postRef.get().then(function(doc) {
+		//console.log(doc.data()); 
+		currentSupport = doc.data()["Support"]; 
+
+
+		// updates the data; 
+		db.collection("Posts").doc(postID).update({
+			"Support": currentSupport+1
+		});
+
+
+	});
+
+	button.disabled = true;
+
+
+}
 
 
