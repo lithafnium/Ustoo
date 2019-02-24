@@ -22,10 +22,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 	  	var supported = doc.data()["supported_posts"] ;
 	  	console.log(supported); 
 	  	// index 1 is the dummy 
-	  	for(var i = 1; i < supported.length; i++){
-	  		var card = document.getElementById(supported[i]); 
-	  		card.querySelector("button").disabled = true; 
-	  		card.querySelector("button").innerHTML = "Supported!"; 
+	  	for(var i = 0; i < supported.length; i++){
+	  		if(supported[i] != "dummy"){
+	  			var card = document.getElementById(supported[i]); 
+	  			card.querySelector("button").disabled = true; 
+	  			card.querySelector("button").innerHTML = "Supported!"; 
+	  		}
 
 	  	}
 	  });

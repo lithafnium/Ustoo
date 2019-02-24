@@ -33,7 +33,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
     //alert("successful login " + firebase.auth().currentUser.uid)
-    uid = user.id; 
+    uid = user.id;
     window.location = "home.html";
 
 
