@@ -21,7 +21,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 	  userRef.get().then(function(doc){
 	  	var supported = doc.data()["supported_posts"] ;
 	  	console.log(supported); 
-	  	// index 1 is the dummy 
 	  	for(var i = 0; i < supported.length; i++){
 	  		if(supported[i] != "dummy"){
 	  			var card = document.getElementById(supported[i]); 
@@ -42,8 +41,14 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 });
 
-
- 
+function getTopThree(){
+	db.collection('Posts').orderBy("Support", "desc").limit(3).get().then(function(querySnapshot){
+		querySnapshot.forEach(function(doc){
+			console.log(doc.data());
+		});
+	});
+}
+getTopThree(); 
 
 // gets all posts in a collection --> at start up
 function initFeed(){
@@ -52,21 +57,12 @@ function initFeed(){
 		querySnapshot.forEach(function(doc){
 			// gets the template from the HTML 
 			var temp = document.getElementsByTagName("template")[0];
-			var user = firebase.auth().currentUser;
-			var userRef = db.collection("Users").doc(user.uid);
 
 			addCard(doc, temp); 
 		})
 	});
 
-	var supported = []; 
-	var user = firebase.auth().currentUser;
-	var userRef = db.collection("Users").doc(uid);
-
-	userRef.get().then(function(doc){
-
-	});
-
+	
 
 }
 
@@ -166,7 +162,6 @@ function addCampaign(button){
 			}).then(function(docref){
 				userRef.update({
 					created_posts: firebase.firestore.FieldValue.arrayUnion(docref.id)
-
 				})
 
 			});
@@ -242,4 +237,3 @@ function resetModal(){
 
 }
 
-//initFeed(); 
