@@ -3,7 +3,7 @@ firebase.auth().signOut().then(function() {
 }, function(error) {
   // An error happened.
 });
-
+var uid; 
 //Click Submit button
 submitButton = document.getElementById('signinbutton');
 submitButton.addEventListener('click', function() {
@@ -32,7 +32,8 @@ submitButton.addEventListener('click', function() {
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
-    alert("successful login " + firebase.auth().currentUser.uid)
+    //alert("successful login " + firebase.auth().currentUser.uid)
+    uid = user.id; 
     window.location = "home.html";
 
 

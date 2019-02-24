@@ -6,56 +6,74 @@ var config = {
     storageBucket: "socialjustice-c3b8e.appspot.com",
     messagingSenderId: "927539973725"
   };
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
+var db = firebase.firestore(); 
 
 
-
-var currentUser;
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 	  // User is signed in.
 	  console.log(user.uid);
-	  currentUser = user; 
+	  var uid = user.uid; 
+	  var userRef = db.collection("Users").doc(user.uid);
+
+	  // sets updated posts and idsables buttons 
+	  userRef.get().then(function(doc){
+	  	var supported = doc.data()["supported_posts"] ;
+	  	console.log(supported); 
+	  	// index 1 is the dummy 
+	  	for(var i = 1; i < supported.length; i++){
+	  		var card = document.getElementById(supported[i]); 
+	  		card.querySelector("button").disabled = true; 
+	  		card.querySelector("button").innerHTML = "Supported!"; 
+
+	  	}
+	  });
+
+
 	} else {
 	  // No user is signed in.
 	  window.location.href = "index.html";
 	}
-
-});//var user = firebase.auth().currentUser;
-
-var database = firebase.database(); 
-var db = firebase.firestore(); 
-
-//var postsRef = firebase.database().ref('Posts/'); 
-var mainfeed = document.getElementById("feed"); 
-
-var posts = db.collection('Posts'); 
-//console.log(posts); 
-//console.log(mainfeed); 
-//console.log(postsRef); 
-
-// gets all posts in a collection --> at start up
-db.collection('Posts').get().then(function(querySnapshot){
-	querySnapshot.forEach(function(doc){
-		// gets the template from the HTML 
-		var temp = document.getElementsByTagName("template")[0];
-		var user = firebase.auth().currentUser;
-		var userRef = db.collection("Users").doc(user.uid)
-
-		addCard(doc, temp); 
-
-
-		
-
 	
-			
-		
-	})
+
+
 });
 
+
+ 
+
+// gets all posts in a collection --> at start up
+function initFeed(){
+
+	db.collection('Posts').get().then(function(querySnapshot){
+		querySnapshot.forEach(function(doc){
+			// gets the template from the HTML 
+			var temp = document.getElementsByTagName("template")[0];
+			var user = firebase.auth().currentUser;
+			var userRef = db.collection("Users").doc(user.uid);
+
+			addCard(doc, temp); 
+		})
+	});
+
+	var supported = []; 
+	var user = firebase.auth().currentUser;
+	var userRef = db.collection("Users").doc(uid);
+
+	userRef.get().then(function(doc){
+
+	});
+
+
+}
+
+
+// listens for changes 
 db.collection('Posts').onSnapshot(function(querySnapshot){
 	querySnapshot.forEach(function(doc) {
 		//console.log(doc.data()["Support"]);
+		var updatedId = doc.id; 
 		var updatedPost = document.getElementById(doc.id);
 		if(updatedPost != null){
 			updatedPost.querySelector(".supportcountlabel").innerHTML = doc.data()["Support"];
@@ -74,12 +92,14 @@ db.collection('Posts').onSnapshot(function(querySnapshot){
 
 function addSupporters(button){
 		//console.log("asdf"); 
-	//console.log(button.closest(".post").id); 
+	//console.log(button.closest(".post").id); ()
 	var postID = button.closest(".post").id;
 	var currentSupport = 0; 
 	var postRef = db.collection("Posts").doc(postID);
 
 	var user = firebase.auth().currentUser;
+	console.log(user); 
+
 	var userRef = db.collection("Users").doc(user.uid);
 
 	postRef.get().then(function(doc) {
@@ -110,8 +130,6 @@ function addSupporters(button){
 function addCampaign(button){
 	var user = firebase.auth().currentUser;
 	var userRef = db.collection("Users").doc(user.uid); 
-
-
 
 	//console.log(user); 
 	var title = document.querySelector(".form-title").value; 
@@ -212,3 +230,5 @@ function resetModal(){
 
 
 }
+
+//initFeed(); 
