@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sign in - ustoo</title>
+    <title>Signup - ustoo</title>
 
     <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
     <script>
@@ -21,27 +21,30 @@
       firebase.initializeApp(config);
     </script>
 
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400" rel="stylesheet">
-    
-
     <!-- Custom styles for this template -->
-
     <link href="css/signin.css" rel="stylesheet">
 
   </head>
 
   <body>
-    <form class="form-signin customform">
+    <div class="form-signin customform">
       <div class="text-center mb-4">
         <h1 style = "color: #18bb9c">ustoo</h1>
         <!-- <h1 class="h3 mb-3 font-weight-normal">Floating labels</h1>
         <p>Build form controls with floating labels via the <code>:placeholder-shown</code> pseudo-element. <a href="https://caniuse.com/#feat=css-placeholder-shown">Works in latest Chrome, Safari, and Firefox.</a></p> -->
         <h5 style = "color: #18bb9c">Raising Social Awareness</h5>
+      </div>
+
+      <div class="form-label-group">
+        <input type="name" id="inputName" class="form-control" placeholder="Name" required autofocus>
+        <label for="inputName">Full name</label>
       </div>
 
       <div class="form-label-group">
@@ -54,21 +57,11 @@
         <label for="inputPassword">Password</label>
       </div>
 
-      <div class="checkbox mb-3">
-        <label style = "color: #18bb9c;">
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-
-      <button id = "signinbutton" class="btn btn-lg btn-primary btn-block signinbtn" type="button">Sign in</button>
-      <p class = "register text-center">Don't have an account? <a href = "signup.html" style = "color: #3C91E6;">Sign up now</a></p>
-    </form>
-
-<!--     <footer class = "customfooter">
-    <p class="mt-5 mb-3 text-muted text-center" style = "color: white !important;">Developed by <a href="http://www.hugozhang.com" style="color:#b3d6e7;">Hugo Zhang</a></p>
-  </footer> -->
+      <button id = "submitButton" class="btn btn-lg btn-primary btn-block signinbtn" type="button">Sign up</button>
+      <p class = "register text-center">Already have an account? <a href="index.html" style = "color: #3C91E6;">Sign in now</a></p>
+    </div>
   </body>
-
-  <script src = "js/login.js"></script>
   
+  <script src = "js/signup.js"></script>
+
 </html>

@@ -8,6 +8,21 @@ var config = {
   };
   firebase.initializeApp(config);
 
+
+
+var currentUser;
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+	  // User is signed in.
+	  console.log(user.uid);
+	  currentUser = user; 
+	} else {
+	  // No user is signed in.
+	  window.location.href = "index.html";
+	}
+
+});//var user = firebase.auth().currentUser;
+
 var database = firebase.database(); 
 var db = firebase.firestore(); 
 
@@ -15,17 +30,25 @@ var db = firebase.firestore();
 var mainfeed = document.getElementById("feed"); 
 
 var posts = db.collection('Posts'); 
-console.log(posts); 
-console.log(mainfeed); 
+//console.log(posts); 
+//console.log(mainfeed); 
 //console.log(postsRef); 
 
-// gets all posts in a collection 
+// gets all posts in a collection --> at start up
 db.collection('Posts').get().then(function(querySnapshot){
 	querySnapshot.forEach(function(doc){
 		// gets the template from the HTML 
 		var temp = document.getElementsByTagName("template")[0];
+		var user = firebase.auth().currentUser;
+		var userRef = db.collection("Users").doc(user.uid)
 
 		addCard(doc, temp); 
+
+
+		
+
+	
+			
 		
 	})
 });
@@ -42,6 +65,7 @@ db.collection('Posts').onSnapshot(function(querySnapshot){
 			var temp = document.getElementsByTagName("template")[0];
 			//var data = doc.data(); 
 			// parses the data into variables 
+			
 			addCard(doc, temp); 
 		}
     });
@@ -54,6 +78,9 @@ function addSupporters(button){
 	var postID = button.closest(".post").id;
 	var currentSupport = 0; 
 	var postRef = db.collection("Posts").doc(postID);
+
+	var user = firebase.auth().currentUser;
+	var userRef = db.collection("Users").doc(user.uid);
 
 	postRef.get().then(function(doc) {
 		//console.log(doc.data()); 
@@ -68,6 +95,12 @@ function addSupporters(button){
 
 	});
 
+	userRef.update({
+		supported_posts: firebase.firestore.FieldValue.arrayUnion(postID)
+	});
+
+
+
 	button.disabled = true;
 	button.innerHTML = "Supported!"
 
@@ -75,30 +108,43 @@ function addSupporters(button){
 }
 
 function addCampaign(button){
+	var user = firebase.auth().currentUser;
+	var userRef = db.collection("Users").doc(user.uid); 
+
+
+
+	//console.log(user); 
 	var title = document.querySelector(".form-title").value; 
 	var location = document.querySelector(".form-location").value; 
-
 	var content = document.querySelector(".form-content").value; 
+
+
 	var d = new Date();
-	var date = d.getMonth()+1 + "/" + d.getDate() + "/" + d.getFullYear() + " ";
+	var date = d.getMonth()+1 + "/" + d.getDate() + "/" + d.getFullYear() + " " + d.getHours() % 12;
+	if(d.getMinutes() < 10){
+		date += ":" + "0" + d.getMinutes(); 
+	} else date += ":" + d.getMinutes(); 
 	if(d.getHours() > 12){
-		date += d.getHours() % 12 + ":" + d.getMinutes() + " " + "PM"; 
+		date += " PM"; 
 	}
 	else{
-		date += d.getHours() % 12 + ":" + d.getMinutes() + "AM"; 
+		date += " AM"; 
 
 
 	}
 	if(title != "" && location != "" && content != ""){
 		console.log(date); 
-		db.collection("Posts").add({
-			Title: title, 
-			Location: location, 
-			Content: content, 
-			Poster: "BobJoe", 
-			Support: 0, 
-			Time: date
+		userRef.get().then(function(doc){
+			db.collection("Posts").add({
+				Title: title, 
+				Location: location, 
+				Content: content, 
+				Poster: doc.data()["name"], 
+				Support: 0, 
+				Time: date
+			});
 		});
+		
 		$('#newCampaign').modal('hide'); 
 	}
 	else{
@@ -120,6 +166,9 @@ function addCampaign(button){
 
 function addCard(doc, temp){
 		// parses the data into variables 
+		var user = firebase.auth().currentUser;
+		var userRef = db.collection("Users").doc(user.uid);
+
 		var data = doc.data(); 
 
 		var title = data["Title"]; 
@@ -136,12 +185,19 @@ function addCard(doc, temp){
 		temp.content.querySelector(".supportcountlabel").innerHTML = support;
 		temp.content.querySelector(".poster").innerHTML = poster;
 		temp.content.querySelector(".post-date").innerHTML = time; 
-		//console.log(postID); 
 		temp.content.querySelector(".post").id = postID; 
 
+
+		
+
+		//console.log(postID); 
 		var clone = document.importNode(temp.content, true); 
 
-		document.getElementById("feed").appendChild(clone); 
+		document.getElementById("feed").appendChild(clone);
+
+
+
+		 
 }
 
 function resetModal(){
