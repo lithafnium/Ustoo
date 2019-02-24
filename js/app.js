@@ -155,6 +155,7 @@ function addCampaign(button){
 	if(title != "" && location != "" && content != ""){
 		console.log(date); 
 		userRef.get().then(function(doc){
+			var created_posts = doc.data()["created_posts"]; 
 			db.collection("Posts").add({
 				Title: title, 
 				Location: location, 
@@ -162,8 +163,16 @@ function addCampaign(button){
 				Poster: doc.data()["name"], 
 				Support: 0, 
 				Time: date
+			}).then(function(docref){
+				userRef.update({
+					created_posts: firebase.firestore.FieldValue.arrayUnion(docref.id)
+
+				})
+
 			});
 		});
+
+		
 		
 		$('#newCampaign').modal('hide'); 
 	}
