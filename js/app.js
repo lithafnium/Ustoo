@@ -8,7 +8,7 @@ var config = {
   };
 firebase.initializeApp(config);
 var db = firebase.firestore(); 
-
+getTopThree();
 
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
@@ -17,10 +17,11 @@ firebase.auth().onAuthStateChanged(function(user) {
 	  var uid = user.uid; 
 	  var userRef = db.collection("Users").doc(user.uid);
 
-	  // sets updated posts and idsables buttons 
+	  // sets updated posts and disables buttons 
 	  userRef.get().then(function(doc){
 	  	var supported = doc.data()["supported_posts"] ;
-	  	console.log(supported); 
+	  	console.log("Look here: " + supported); 
+	  	// index 1 is the dummy 
 	  	for(var i = 0; i < supported.length; i++){
 	  		if(supported[i] != "dummy"){
 	  			var card = document.getElementById(supported[i]); 
@@ -41,15 +42,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 });
 
-function getTopThree(){
-	db.collection('Posts').orderBy("Support", "desc").limit(3).get().then(function(querySnapshot){
-		querySnapshot.forEach(function(doc){
-			console.log(doc.data());
-		});
-	});
-}
-getTopThree(); 
-
 // gets all posts in a collection --> at start up
 function initFeed(){
 
@@ -57,15 +49,23 @@ function initFeed(){
 		querySnapshot.forEach(function(doc){
 			// gets the template from the HTML 
 			var temp = document.getElementsByTagName("template")[0];
+			var user = firebase.auth().currentUser;
+			var userRef = db.collection("Users").doc(user.uid);
 
-			addCard(doc, temp); 
+			addCard(doc, temp);
 		})
 	});
 
-	
+	var supported = []; 
+	var user = firebase.auth().currentUser;
+	var userRef = db.collection("Users").doc(uid);
+
+	userRef.get().then(function(doc){
+
+	});
+
 
 }
-
 
 // listens for changes 
 db.collection('Posts').onSnapshot(function(querySnapshot){
@@ -107,7 +107,9 @@ function addSupporters(button){
 
 		// updates the data; 
 		db.collection("Posts").doc(postID).update({
-			"Support": currentSupport+1
+			"Support": currentSupport+1,
+			supporters: firebase.firestore.FieldValue.arrayUnion(user.email)
+
 		});
 
 
@@ -125,6 +127,18 @@ function addSupporters(button){
 
 }
 
+function getTopThree(){
+	db.collection('Posts').orderBy("Support", "desc").limit(3).get().then(function(querySnapshot){
+		querySnapshot.forEach(function(doc){
+			console.log(doc.data());
+			var temp = document.getElementsByTagName("template")[1];
+			//var data = doc.data(); 
+			// parses the data into variables 
+			addTrendingCard(doc, temp); 
+		});
+	});
+}
+
 function addCampaign(button){
 	var user = firebase.auth().currentUser;
 	var userRef = db.collection("Users").doc(user.uid); 
@@ -134,6 +148,8 @@ function addCampaign(button){
 	var location = document.querySelector(".form-location").value; 
 	var content = document.querySelector(".form-content").value; 
 
+	var supporters_list = []; 
+	supporters_list.push("dummy"); 
 
 	var d = new Date();
 	var date = d.getMonth()+1 + "/" + d.getDate() + "/" + d.getFullYear() + " " + d.getHours() % 12;
@@ -158,10 +174,12 @@ function addCampaign(button){
 				Content: content, 
 				Poster: doc.data()["name"], 
 				Support: 0, 
-				Time: date
+				Time: date,
+				supporters: supporters_list
 			}).then(function(docref){
 				userRef.update({
 					created_posts: firebase.firestore.FieldValue.arrayUnion(docref.id)
+
 				})
 
 			});
@@ -188,6 +206,9 @@ function addCampaign(button){
 	
 }
 
+var lastSupportCount = -1;
+var currentSupportCount = 0;
+
 function addCard(doc, temp){
 		// parses the data into variables 
 		var user = firebase.auth().currentUser;
@@ -198,7 +219,10 @@ function addCard(doc, temp){
 		var title = data["Title"]; 
 		var content = data["Content"]; 
 		var time = data["Time"]; 
-		var support = data["Support"]; 
+		var support = data["Support"];
+
+		// currentSupportCount = support
+
 		var location = data["Location"]; 
 		var poster = data["Poster"]; 
 		var postID = doc.id; 
@@ -211,17 +235,62 @@ function addCard(doc, temp){
 		temp.content.querySelector(".post-date").innerHTML = time; 
 		temp.content.querySelector(".post").id = postID; 
 
+		//console.log(postID); 
+		var clone = document.importNode(temp.content, true); 
 
-		
+		// if(currentSupportCount > lastSupportCount) {
+		// 	document.getElementById("feed").insertBefore(clone, document.getElementById("placeholder"));
+		// 	console.log(currentSupportCount, lastSupportCount)
+
+		// } else if (currentSupportCount <= lastSupportCount) {
+		// 	document.getElementById("feed").appendChild(clone);
+		// 	console.log(currentSupportCount, lastSupportCount)
+		// }
+
+		// lastSupportCount = currentSupportCount
+		 document.getElementById("feed").appendChild(clone);
+}
+
+function addTrendingCard(doc, temp){
+		// parses the data into variables 
+		var user = firebase.auth().currentUser;
+		var userRef = db.collection("Users").doc(user.uid);
+
+		var data = doc.data(); 
+
+		var title = data["Title"]; 
+		var content = data["Content"]; 
+		var time = data["Time"]; 
+		var support = data["Support"];
+
+		// currentSupportCount = support
+
+		var location = data["Location"]; 
+		var poster = data["Poster"]; 
+		var postID = doc.id; 
+
+		// sets the template with the data
+		temp.content.querySelector(".title").innerHTML = title;
+		temp.content.querySelector(".content").innerHTML = content;
+		temp.content.querySelector(".supportcountlabel").innerHTML = support;
+		temp.content.querySelector(".poster").innerHTML = poster;
+		temp.content.querySelector(".post-date").innerHTML = time; 
+		temp.content.querySelector(".post").id = postID; 
 
 		//console.log(postID); 
 		var clone = document.importNode(temp.content, true); 
 
-		document.getElementById("feed").appendChild(clone);
+		// if(currentSupportCount > lastSupportCount) {
+		// 	document.getElementById("feed").insertBefore(clone, document.getElementById("placeholder"));
+		// 	console.log(currentSupportCount, lastSupportCount)
 
+		// } else if (currentSupportCount <= lastSupportCount) {
+		// 	document.getElementById("feed").appendChild(clone);
+		// 	console.log(currentSupportCount, lastSupportCount)
+		// }
 
-
-		 
+		// lastSupportCount = currentSupportCount
+		 document.getElementById("trendingfeed").appendChild(clone);
 }
 
 function resetModal(){
@@ -237,3 +306,4 @@ function resetModal(){
 
 }
 
+//initFeed(); 

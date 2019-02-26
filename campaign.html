@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>ustoo</title>
+  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link href="css/main.css" rel="stylesheet">
+  <link href="css/campaign.css" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyDWA0vvGm5Dxu0nvbACdXDjsKm4haS1S5M",
+      authDomain: "socialjustice-c3b8e.firebaseapp.com",
+      databaseURL: "https://socialjustice-c3b8e.firebaseio.com",
+      projectId: "socialjustice-c3b8e",
+      storageBucket: "socialjustice-c3b8e.appspot.com",
+      messagingSenderId: "927539973725"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <script src = "js/campaign.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400,500" rel="stylesheet">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+  <link rel="manifest" href="images/site.webmanifest">
+  <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
+
+<body style = "padding-bottom: 100px;">
+
+    <!-- Add Navbar Here -->
+    <nav class="navbar navbar-expand navbar-light navbar-custom fixed-top" style = "padding-left: 50px; padding-right: 50px; border-bottom: 1px solid #FAFBFC;">
+        <a class="navbar-brand" href="home.html" style = "color: #18bb9c; font-family: 'Fira Sans', sans-serif; font-weight: 500; font-size: 32px;">ustoo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            </ul>
+            <div class="dropdown">
+              <button class="btn btn-outline-custom dropdown-toggle dropdown-custom" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-user"></i> 
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Campaigns</a>
+                <a class="dropdown-item" href="#">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" id = "dropdown-logout">Logout</a>
+              </div>
+            </div>
+            
+
+          </div>
+    </nav>
+    
+
+    <div class = "container">
+      <div class = "row">
+        <div class = "col-md-12 createdFeed" id = "createdFeed">
+          <h3 style = "color: #353535">Your Campaigns</h3>
+          <hr>
+          <p style = "color: gray" id = "createdEmptyP">You have not created any campaigns yet.</p>
+        </div>
+      </div>
+      <div class = "row">
+        <div class = "col-md-12 supportedFeed" id = "supportedFeed">
+          <h3 style = "color: #353535">Supported Campaigns</h3>
+          <hr>
+          <p style = "color: gray;" id = "supportedEmptyP">You have not supported any campaigns yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <template>
+        <div class = "container post" >
+               <div class = "row card-row">
+                   <div class = "col-md-2 col-sm-4 sidebar-created">
+                       <div class = "col-md-12">
+                            <span><h3 class = "supportcountlabel"> </h3></span>
+                            <p> Supporters</p>
+                          
+                       </div>
+                   </div>
+                   <div class = "col-md-10 col-sm-8 post-content" >
+                       <div class = "row post-header" >
+                          <h4 class = "title"></h4>
+                           
+                       </div>
+                       <div class = "row post-body"><p class = "content"> </p>
+                       </div>
+                       <div class = "row post-footer" >
+                            <div class = "col-md-8" style = "padding: 0px !important" >
+                              <button class="btn btn-custom-created my-2 my-sm-0 contactsupportersbutton" type="submit" onclick = "contactSupporters(this.id)">Contact Supporters</button>
+                              <button class="btn btn-custom-created my-2 my-sm-0 contactlegislatorbutton" type="submit" data-toggle="modal" data-target="#chooseArea" onclick ="setIDModal(this.id)">Contact Legislator</button>
+                            </div>
+                            <div class ="col-md-4 " style = "text-align: right">
+                              <p class = "post-info"><span><i>Posted by <a class = "poster" href = "#"></a></span> at <span class = "post-date"></span></i></p>
+                            </div>
+
+
+                       
+                       </div>
+                   </div>
+               </div>
+          </div>
+    </template>
+
+    <template>
+        <div class = "container post" >
+               <div class = "row card-row">
+                   <div class = "col-md-2 col-sm-4 sidebar">
+                       <div class = "col-md-12">
+                            <span><h3 class = "supportcountlabel"> </h3></span>
+                            <p> Supporters</p>
+                          
+                       </div>
+                   </div>
+                   <div class = "col-md-10 col-sm-8 post-content" >
+                       <div class = "row post-header" >
+                          <h4 class = "title"></h4>
+                           
+                       </div>
+                       <div class = "row post-body"><p class = "content"> </p>
+                       </div>
+                       <div class = "row post-footer" >
+                            <div class = "col-md-4" style = "padding: 0px !important" >
+                              <button class="btn btn-custom my-2 my-sm-0" type="submit" onclick = "addSupporters(this)">Support</button>
+                            </div>
+                            <div class ="col-md-8 " style = "text-align: right">
+                              <p class = "post-info"><span><i>Posted by <a class = "poster" href = "#"></a></span> at <span class = "post-date"></span></i></p>
+                            </div>
+
+
+                       
+                       </div>
+                   </div>
+               </div>
+          </div>
+    </template>
+
+    <!-- Modal -->
+    <div class="modal fade" id="chooseArea" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Find your representative</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <select class="custom-select" id="inputGroupSelect01">
+                <option selected>Choose your district...</option>
+                <option value="2nd Middlesex">2nd Middlesex</option>
+                <option value="2nd Hampden">2nd Hampden</option>
+                <option value="1st Norfolk">1st Norfolk</option>
+                <option value="12th Middlesex">12th Middlesex</option>
+                <option value="34th Middlesex">34th Middlesex</option>
+                <option value="1st Berkshire">1st Berkshire</option>
+                <option value="1st Bristol">1st Bristol</option>
+                <option value="37th Middlesex">37th Middlesex</option>
+                <option value="5th Worcester">5th Worcester</option>
+                <option value="4th Suffolk">4th Suffolk</option>
+                <option value="1st Franklin">1st Franklin</option>
+                <option value="3rd Hampden">3rd Hampden</option>
+                <option value="32nd Middlesex">32nd Middlesex</option>
+                <option value="13th Bristol">13th Bristol</option>
+                <option value="10th Essex">10th Essex</option>
+                <option value="15th Essex">15th Essex</option>
+                <option value="11th Essex">11th Essex</option>
+                <option value="2nd Hampshire">2nd Hampshire</option>
+                <option value="9th Plymouth">9th Plymouth</option>
+                <option value="2nd Norfolk">2nd Norfolk</option>
+                <option value="15th Middlesex">15th Middlesex</option>
+                <option value="26th Middlesex">26th Middlesex</option>
+                <option value="10th Suffolk">10th Suffolk</option>
+                <option value="2nd Barnstable">2nd Barnstable</option>
+                <option value="11th Plymouth">11th Plymouth</option>
+                <option value="12th Suffolk">12th Suffolk</option>
+                <option value="5th Norfolk">5th Norfolk</option>
+                <option value="6th Plymouth">6th Plymouth</option>
+                <option value="8th Plymouth">8th Plymouth</option>
+                <option value="31st Middlesex">31st Middlesex</option>
+                <option value="25th Middlesex">25th Middlesex</option>
+                <option value="5th Plymouth">5th Plymouth</option>
+                <option value="19th Suffolk">19th Suffolk</option>
+                <option value="16th Essex">16th Essex</option>
+                <option value="3rd Hampshire">3rd Hampshire</option>
+                <option value="16th Worcester">16th Worcester</option>
+                <option value="35th Middlesex">35th Middlesex</option>
+                <option value="9th Norfolk">9th Norfolk</option>
+                <option value="7th Norfolk">7th Norfolk</option>
+                <option value="10th Plymouth">10th Plymouth</option>
+                <option value="6th Worcester">6th Worcester</option>
+                <option value="8th Middlesex">8th Middlesex</option>
+                <option value="8th Essex">8th Essex</option>
+                <option value="15th Suffolk">15th Suffolk</option>
+                <option value="3rd Berkshire">3rd Berkshire</option>
+                <option value="1st Worcester">1st Worcester</option>
+                <option value="5th Essex">5th Essex</option>
+                <option value="6th Hampden">6th Hampden</option>
+                <option value="6th Bristol">6th Bristol</option>
+                <option value="7th Worcester">7th Worcester</option>
+                <option value="6th Norfolk">6th Norfolk</option>
+                <option value="23rd Middlesex">23rd Middlesex</option>
+                <option value="13th Norfolk">13th Norfolk</option>
+                <option value="36th Middlesex">36th Middlesex</option>
+                <option value="13th Middlesex">13th Middlesex</option>
+                <option value="2nd Plymouth">2nd Plymouth</option>
+                <option value="16th Middlesex">16th Middlesex</option>
+                <option value="10th Hampden">10th Hampden</option>
+                <option value="21st Middlesex">21st Middlesex</option>
+                <option value="14th Middlesex">14th Middlesex</option>
+                <option value="4th Middlesex">4th Middlesex</option>
+                <option value="5th Bristol">5th Bristol</option>
+                <option value="30th Middlesex">30th Middlesex</option>
+                <option value="1st Middlesex">1st Middlesex</option>
+                <option value="2nd Bristol">2nd Bristol</option>
+                <option value="3rd Worcester">3rd Worcester</option>
+                <option value="29th Middlesex">29th Middlesex</option>
+                <option value="11th Bristol">11th Bristol</option>
+                <option value="4th Worcester">4th Worcester</option>
+                <option value="4th Essex">4th Essex</option>
+                <option value="3rd Middlesex">3rd Middlesex</option>
+                <option value="6th Suffolk">6th Suffolk</option>
+                <option value="17th Suffolk">17th Suffolk</option>
+                <option value="4th Bristol">4th Bristol</option>
+                <option value="13th Suffolk">13th Suffolk</option>
+                <option value="5th Barnstable">5th Barnstable</option>
+                <option value="20th Middlesex">20th Middlesex</option>
+                <option value="8th Norfolk">8th Norfolk</option>
+                <option value="11th Worcester">11th Worcester</option>
+                <option value="4th Plymouth">4th Plymouth</option>
+                <option value="15th Worcester">15th Worcester</option>
+                <option value="1st Essex">1st Essex</option>
+                <option value="11th Middlesex">11th Middlesex</option>
+                <option value="12th Plymouth">12th Plymouth</option>
+                <option value="10th Middlesex">10th Middlesex</option>
+                <option value="17th Worcester">17th Worcester</option>
+                <option value="7th Middlesex">7th Middlesex</option>
+                <option value="5th Middlesex">5th Middlesex</option>
+                <option value="8th Suffolk">8th Suffolk</option>
+                <option value="22nd Middlesex">22nd Middlesex</option>
+                <option value="1st Suffolk">1st Suffolk</option>
+                <option value="13th Worcester">13th Worcester</option>
+                <option value="11th Suffolk">11th Suffolk</option>
+                <option value="3rd Norfolk">3rd Norfolk</option>
+                <option value="2nd Berkshire">2nd Berkshire</option>
+                <option value="9th Bristol">9th Bristol</option>
+                <option value="28th Middlesex">28th Middlesex</option>
+                <option value="18th Worcester">18th Worcester</option>
+                <option value="11th Norfolk">11th Norfolk</option>
+                <option value="3rd Plymouth">3rd Plymouth</option>
+                <option value="3rd Suffolk">3rd Suffolk</option>
+                <option value="14th Essex">14th Essex</option>
+                <option value="5th Suffolk">5th Suffolk</option>
+                <option value="2nd Essex">2nd Essex</option>
+                <option value="18th Middlesex">18th Middlesex</option>
+                <option value="17th Essex">17th Essex</option>
+                <option value="18th Suffolk">18th Suffolk</option>
+                <option value="9th Worcester">9th Worcester</option>
+                <option value="1st Plymouth">1st Plymouth</option>
+                <option value="4th Norfolk">4th Norfolk</option>
+                <option value="10th Worcester">10th Worcester</option>
+                <option value="17th Middlesex">17th Middlesex</option>
+                <option value="12th Worcester">12th Worcester</option>
+                <option value="18th Essex">18th Essex</option>
+                <option value="3rd Bristol">3rd Bristol</option>
+                <option value="14th Worcester">14th Worcester</option>
+                <option value="12th Bristol">12th Bristol</option>
+                <option value="6th Essex">6th Essex</option>
+                <option value="4th Barnstable">4th Barnstable</option>
+                <option value="14th Norfolk">14th Norfolk</option>
+                <option value="7th Hampden">7th Hampden</option>
+                <option value="4th Berkshire">4th Berkshire</option>
+                <option value="14th Bristol">14th Bristol</option>
+                <option value="27th Middlesex">27th Middlesex</option>
+                <option value="12th Hampden">12th Hampden</option>
+                <option value="19th Middlesex">19th Middlesex</option>
+                <option value="6th Middlesex">6th Middlesex</option>
+                <option value="24th Middlesex">24th Middlesex</option>
+                <option value="12th Norfolk">12th Norfolk</option>
+                <option value="10th Norfolk">10th Norfolk</option>
+                <option value="2nd Suffolk">2nd Suffolk</option>
+                <option value="1st Hampshire">1st Hampshire</option>
+                <option value="9th Suffolk">9th Suffolk</option>
+                <option value="14th Suffolk">14th Suffolk</option>
+                <option value="8th Bristol">8th Bristol</option>
+                <option value="7th Bristol">7th Bristol</option>
+                <option value="1st Hampden">1st Hampden</option>
+                <option value="8th Worcester">8th Worcester</option>
+                <option value="13th Essex">13th Essex</option>
+                <option value="9th Middlesex">9th Middlesex</option>
+                <option value="10th Bristol">10th Bristol</option>
+                <option value="7th Plymouth">7th Plymouth</option>
+                <option value="9th Hampden">9th Hampden</option>
+                <option value="7th Essex">7th Essex</option>
+                <option value="7th Suffolk">7th Suffolk</option>
+                <option value="33rd Middlesex">33rd Middlesex</option>
+                <option value="3rd Essex">3rd Essex</option>
+                <option value="5th Hampden">5th Hampden</option>
+                <option value="4th Hampden">4th Hampden</option>
+                <option value="3rd Barnstable">3rd Barnstable</option>
+                <option value="16th Suffolk">16th Suffolk</option>
+                <option value="15th Norfolk">15th Norfolk</option>
+                <option value="8th Hampden">8th Hampden</option>
+                <option value="12th Essex">12th Essex</option>
+                <option value="1st Barnstable">1st Barnstable</option>
+              </select>
+            </div>          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id = "temp" onclick = "contactLegislator(this.id)" data-dismiss="modal">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src = "js/logout.js"></script>
+
+<script>
+  $(document).ready(function(){
+
+    $("#chooseArea").on('hide.bs.modal', function(){
+      resetModal()
+    });
+});
+</script>
+
+</body>
+
+</html>
