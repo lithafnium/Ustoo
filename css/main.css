@@ -1,3 +1,15 @@
+p{
+	font-size: 0.8rem !important;
+}
+
+.btn{
+	font-size: 0.8rem !important; 
+}
+
+h4{
+	font-size: 1.2rem !important;
+}
+
 body{
 	padding-top: 80px;
 	background: #f1f3f5;
